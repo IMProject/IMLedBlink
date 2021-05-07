@@ -64,15 +64,15 @@ SystemClock_Config(void) {
 
     /** Initializes the CPU, AHB and APB busses clocks
     */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48 | RCC_OSCILLATORTYPE_LSI
-                                       | RCC_OSCILLATORTYPE_HSE;
-    RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-    RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
-    RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48
+                                       | RCC_OSCILLATORTYPE_HSI;
+    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-    RCC_OscInitStruct.PLL.PLLM = 5;
-    RCC_OscInitStruct.PLL.PLLN = 20;
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+    RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
+    RCC_OscInitStruct.PLL.PLLM = 1;
+    RCC_OscInitStruct.PLL.PLLN = 10;
     RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
     RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
     RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
@@ -91,12 +91,11 @@ SystemClock_Config(void) {
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
         Error_Handler();
     }
-    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_USB;
-    PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
     PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
-    PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_HSE;
-    PeriphClkInit.PLLSAI1.PLLSAI1M = 5;
-    PeriphClkInit.PLLSAI1.PLLSAI1N = 8;
+    PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_HSI;
+    PeriphClkInit.PLLSAI1.PLLSAI1M = 1;
+    PeriphClkInit.PLLSAI1.PLLSAI1N = 10;
     PeriphClkInit.PLLSAI1.PLLSAI1P = RCC_PLLP_DIV2;
     PeriphClkInit.PLLSAI1.PLLSAI1Q = RCC_PLLQ_DIV2;
     PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV2;

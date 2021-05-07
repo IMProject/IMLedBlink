@@ -24,7 +24,7 @@
 #include <string.h>
 
 #define MAGIC_KEY_ADDRESS 0x08007800
-#define ENTER_MAGIC_KEY 0x5555281019875555
+#define MAGIC_KEY_VALUE 0x5555281019875555
 
 #define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
 #define GET_VERSION_CMD             "version"           //!< String command for bootloader to send version
