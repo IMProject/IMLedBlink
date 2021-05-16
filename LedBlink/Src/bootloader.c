@@ -43,7 +43,7 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
     } else if (0 == strcmp((char*)buf, STR_FLASH_FW)) {
 
         Bootloader_enterBL();
-    } else if (0 == strcmp((char*)buf, STR_FLASH_FW)) {
+    } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
 
         Version_copyToBuffer((uint8_t*)buffer, sizeof(buffer));
         CDC_Transmit_FS((uint8_t*)buffer, strlen(buffer));
