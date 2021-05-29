@@ -34,12 +34,19 @@
 
 #include "version.h"
 #include "bootloader.h"
+#ifdef STM32L4xx
 #include "stm32l4xx_hal.h"
+#elif STM32H7xx
+#include "stm32h7xx_hal.h"
+#endif
 #include "usbd_cdc_if.h"
 #include <string.h>
 
+#ifdef STM32L4xx
 #define MAGIC_KEY_ADDRESS 0x08007800
-#define MAGIC_KEY_VALUE 0x5555281019875555
+#elif STM32H7xx
+#define MAGIC_KEY_ADDRESS 0x080202A0
+#endif
 
 #define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
 #define GET_VERSION_CMD             "version"           //!< String command for bootloader to send version
@@ -63,7 +70,6 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
         Version_copyToBuffer((uint8_t*)buffer, sizeof(buffer));
         CDC_Transmit_FS((uint8_t*)buffer, strlen(buffer));
     }
-
 }
 
 void
@@ -72,6 +78,7 @@ Bootloader_enterBL(void) {
     //Erase the page with the magic key so the bootloader knows it needs to flash the firmware.
     HAL_FLASH_Unlock();
     HAL_StatusTypeDef      status = HAL_OK;
+#ifdef STM32L4xx
     FLASH_EraseInitTypeDef pEraseInit;
     uint32_t               PageError  = 0;
 
@@ -82,6 +89,14 @@ Bootloader_enterBL(void) {
     pEraseInit.Page      = erase_page;
     pEraseInit.TypeErase = FLASH_TYPEERASE_PAGES;
     status               = HAL_FLASHEx_Erase(&pEraseInit, &PageError);
+
+#elif STM32H7xx
+    // H7 support only sector erase. To save space we are using the method to overwrite flash of the firmware.
+    uint8_t data[32] = {0};
+    status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_FLASHWORD, MAGIC_KEY_ADDRESS, (uint32_t)data);
+
+#endif
+
 
     if (status == HAL_OK) {
 
