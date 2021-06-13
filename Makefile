@@ -78,7 +78,8 @@ format:
 #
 TARGETS	= \
 	stm32l4xx \
-	stm32h7xx
+	stm32h7xx \
+	stm32f7xx
 
 all:	$(TARGETS)
 
@@ -92,6 +93,9 @@ clean:
 matek_H7_slim:
 	${MAKE} stm32h7xx BOARD=MATEK_H743_SLIM
 
+pixhawk4:
+	${MAKE} stm32f7xx BOARD=PIXHAWK4
+
 #
 # Microcontroller specific targets.
 #
@@ -101,7 +105,9 @@ stm32l4xx: $(MAKEFILE_LIST)
 
 stm32h7xx: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx FLASH=INTERNAL_FLASH TARGET_FILE_NAME=$@
-	
+
 stm32h7xx_ext: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx FLASH=EXTERNAL_FLASH TARGET_FILE_NAME=$@
-	
+
+stm32f7xx: $(MAKEFILE_LIST)
+	${MAKE} -f Makefile.stm32f7xx LDSCRIPT=STM32F7xx FLASH=INTERNAL_FLASH TARGET_FILE_NAME=$@

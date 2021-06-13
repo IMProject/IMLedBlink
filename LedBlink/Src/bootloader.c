@@ -38,14 +38,18 @@
 #include "stm32l4xx_hal.h"
 #elif STM32H7xx
 #include "stm32h7xx_hal.h"
+#elif STM32F7xx
+#include "stm32f7xx_hal.h"
 #endif
 #include "usbd_cdc_if.h"
 #include <string.h>
 
 #ifdef STM32L4xx
-#define MAGIC_KEY_ADDRESS 0x08007800
+#define MAGIC_KEY_ADDRESS (0x08007800)
 #elif STM32H7xx
-#define MAGIC_KEY_ADDRESS 0x080202A0
+#define MAGIC_KEY_ADDRESS (0x080202A0)
+#elif STM32F7xx
+#define MAGIC_KEY_ADDRESS (0x08020200U)
 #endif
 
 #define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
@@ -95,6 +99,16 @@ Bootloader_enterBL(void) {
     uint8_t data[32] = {0};
     status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_FLASHWORD, MAGIC_KEY_ADDRESS, (uint32_t)data);
 
+#elif STM32F7xx
+    uint32_t data = 0U;
+
+    status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, MAGIC_KEY_ADDRESS, (uint64_t) data);
+
+    if (status == HAL_OK) {
+        status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, MAGIC_KEY_ADDRESS + 4U, (uint64_t) data);
+    }
+#else
+    status = HAL_ERROR;
 #endif
 
 
