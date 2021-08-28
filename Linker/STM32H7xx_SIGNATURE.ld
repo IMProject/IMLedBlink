@@ -64,7 +64,8 @@ MEMORY
 DTCMRAM (xrw)    : ORIGIN = 0x20000000, LENGTH = 128K
 RAM_D1 (xrw)     : ORIGIN = 0x24000000, LENGTH = 512K
 RAM_D2 (xrw)     : ORIGIN = 0x30000000, LENGTH = 288K
-RAM_D3 (xrw)     : ORIGIN = 0x38000000, LENGTH = 64K
+BL_FLAG_RAM (xrw): ORIGIN = 0x38000000, LENGTH = 64 /* Bootloader flag in RAM */
+RAM_D3 (xrw)     : ORIGIN = 0x38000040, LENGTH = 64K - 64
 ITCMRAM (xrw)    : ORIGIN = 0x00000000, LENGTH = 64K
 SIGNATURE (rx)   : ORIGIN = 0x0801FFC0, LENGTH = 64 /* Never written to the FLASH, it is only a binary signature. */
 FLASH (rx)       : ORIGIN = 0x08020000, LENGTH = 1920K
@@ -92,6 +93,11 @@ SECTIONS
     . += 32; /* Keep empty 32 bytes for bootloader to write flag*/
     BYTE(0xFF)
   } >FLASH
+  
+  .bootloader_flag_ram : ALIGN(4)
+  {
+    KEEP(*(.bootloader_flag_ram))
+  } >BL_FLAG_RAM AT> FLASH
 
   /* The program code and other data goes into FLASH */
   .text :

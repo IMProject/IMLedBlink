@@ -64,8 +64,12 @@ typedef struct signature {
 __attribute__ ((section(".fw_signature"))) signature_s firmware_signature = {.magic_key = SINGATURE_MAGIC_KEY};
 __attribute__ ((section(".bootloader_flag_flash"))) uint64_t bootloader_flag_flash[4] =
 { BOOTLOADER_MAGIC_KEY, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF };
+__attribute__ ((section(".bootloader_flag_ram"))) uint64_t bootloader_flag_ram[4] =
+{ 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF };
+
 #define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
 #define GET_VERSION_CMD             "version"           //!< String command for bootloader to send version
+#define STR_ENTER_BL                "enter_bl"          //!< String command to write flag to RAM and enter bootloader
 #define STR_FLASH_FW                "flash_fw"          //!< String command for erase magic key and enter bootloader
 #define STR_IM_APPLICATION          "IMApplication"     //!< String for inform IMFlasher this is application
 #define STR_ACK_OK                  "OK"
@@ -78,11 +82,16 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
 
     if (0 == strcmp((char*)buf, SW_TYPE_STR)) {
         CDC_Transmit_FS((uint8_t*)STR_IM_APPLICATION, strlen(STR_IM_APPLICATION));
-        CDC_Transmit_FS((uint8_t*)buffer, strlen(buffer));
+
+    } else if (0 == strcmp((char*)buf, STR_ENTER_BL)) {
+
+        CDC_Transmit_FS((uint8_t*)STR_ACK_OK, strlen(STR_ACK_OK));
+        Bootloader_enterBLOverRam();
 
     } else if (0 == strcmp((char*)buf, STR_FLASH_FW)) {
 
-        Bootloader_enterBL();
+        Bootloader_enterBLOverFlash();
+
     } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
 
         Version_copyToBuffer((uint8_t*)buffer, sizeof(buffer));
@@ -93,9 +102,17 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
 }
 
 void
-Bootloader_enterBL(void) {
+Bootloader_enterBLOverRam(void) {
+    bootloader_flag_ram[0] =  BOOTLOADER_MAGIC_KEY;
+    HAL_NVIC_SystemReset();
+}
 
-    //Erase the page with the magic key so the bootloader knows it needs to flash the firmware.
+void
+Bootloader_enterBLOverFlash(void) {
+
+    /* Erase the page with the magic key so the bootloader knows it needs to flash the firmware.
+     * Once erased new firmware needs to be flashed. For entering in BL without flashing use enterBLOverRam.
+     */
     HAL_FLASH_Unlock();
     HAL_StatusTypeDef      status = HAL_OK;
 #ifdef STM32L4xx

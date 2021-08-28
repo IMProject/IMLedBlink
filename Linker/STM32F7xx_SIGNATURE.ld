@@ -36,9 +36,10 @@ _Min_Stack_Size = 0x400 ;	/* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  RAM    (xrw)    : ORIGIN = 0x20000000,	LENGTH = 512K
-  SIGNATURE (rx)  : ORIGIN = 0x0801FFC0, 	LENGTH = 64 /* Never written to the FLASH, it is only a binary signature. */
-  FLASH  (rx)     : ORIGIN = 0x08020000,	LENGTH = 1920K
+  BL_FLAG_RAM (xrw): ORIGIN = 0x20000000, LENGTH = 64 /* Bootloader flag in RAM */
+  RAM    (xrw)     : ORIGIN = 0x20000040,	LENGTH = 512K - 64
+  SIGNATURE (rx)   : ORIGIN = 0x0801FFC0, 	LENGTH = 64 /* Never written to the FLASH, it is only a binary signature. */
+  FLASH  (rx)      : ORIGIN = 0x08020000,	LENGTH = 1920K
 }
 
 /* Sections */

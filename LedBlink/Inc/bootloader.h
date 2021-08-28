@@ -38,7 +38,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void Bootloader_enterBL(void);
+void Bootloader_enterBLOverRam(void);
+void Bootloader_enterBLOverFlash(void);
 void Bootloader_checkCommand(uint8_t* buf, uint32_t length);
 
 #endif /* INC_BOOTLOADER_H_ */

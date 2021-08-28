@@ -61,11 +61,13 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 320K
-/* Nothing will be written here. It is here only to add 64 bytes signature to the binary file and
-   it is on the bootloader to use this data to verify firmware. */
-SIGNATURE (rx) : ORIGIN = 0x08007FC0, LENGTH = 64 
-FLASH (rx)     : ORIGIN = 0x08008000, LENGTH = 480K
+  BL_FLAG_RAM (xrw): ORIGIN = 0x20000000, LENGTH = 64 /* Bootloader flag in RAM */
+  RAM    (xrw)     : ORIGIN = 0x20000040, LENGTH = 320K - 64
+
+  /* Nothing will be written here. It is here only to add 64 bytes signature to the binary file and
+   * it is on the bootloader to use this data to verify firmware. */
+  SIGNATURE (rx) : ORIGIN = 0x08007FC0, LENGTH = 64 
+  FLASH (rx)     : ORIGIN = 0x08008000, LENGTH = 480K
 }
 
 /* Define output sections */
