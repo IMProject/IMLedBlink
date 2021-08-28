@@ -43,17 +43,6 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 
-typedef struct signature {
-    uint64_t magic_key;
-    uint64_t unused[7];
-} signature_s;
-
-#define SINGATURE_MAGIC_KEY 0xDEC0DE5528101987
-
-__attribute__ ((section(".fw_signature"))) signature_s firmware_signature = {.magic_key = SINGATURE_MAGIC_KEY};
-__attribute__ ((section(".bootloader_flag"))) uint64_t bootloader_flag[4] =
-{ 0x28101987A5B5C5D5, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF };
-
 int
 main(void) {
     HAL_Init();

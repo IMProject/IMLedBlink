@@ -67,7 +67,7 @@ RAM_D2 (xrw)     : ORIGIN = 0x30000000, LENGTH = 288K
 RAM_D3 (xrw)     : ORIGIN = 0x38000000, LENGTH = 64K
 ITCMRAM (xrw)    : ORIGIN = 0x00000000, LENGTH = 64K
 SIGNATURE (rx)   : ORIGIN = 0x0801FFC0, LENGTH = 64 /* Never written to the FLASH, it is only a binary signature. */
-FLASH (rx)       : ORIGIN = 0x08020000, LENGTH = 1920K - 64
+FLASH (rx)       : ORIGIN = 0x08020000, LENGTH = 1920K
 }
 
 /* Define output sections */
@@ -86,7 +86,7 @@ SECTIONS
     . = ALIGN(32);
   } >FLASH
   
-  .bootloader_flag : ALIGN(4)
+  .bootloader_flag_flash : ALIGN(4)
   {
     FILL(0xFFFFFFFF);
     . += 32; /* Keep empty 32 bytes for bootloader to write flag*/

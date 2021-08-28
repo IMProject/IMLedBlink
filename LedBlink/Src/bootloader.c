@@ -43,6 +43,12 @@
 #endif
 #include "usbd_cdc_if.h"
 #include <string.h>
+#include <stdint.h>
+
+typedef struct signature {
+    uint64_t magic_key;
+    uint64_t unused[7];
+} signature_s;
 
 #ifdef STM32L4xx
 #define MAGIC_KEY_ADDRESS (0x08007800)
@@ -52,10 +58,18 @@
 #define MAGIC_KEY_ADDRESS (0x08020200U)
 #endif
 
+#define SINGATURE_MAGIC_KEY 0xDEC0DE5528101987
+#define BOOTLOADER_MAGIC_KEY 0x28101987A5B5C5D5
+
+__attribute__ ((section(".fw_signature"))) signature_s firmware_signature = {.magic_key = SINGATURE_MAGIC_KEY};
+__attribute__ ((section(".bootloader_flag_flash"))) uint64_t bootloader_flag_flash[4] =
+{ BOOTLOADER_MAGIC_KEY, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF };
 #define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
 #define GET_VERSION_CMD             "version"           //!< String command for bootloader to send version
 #define STR_FLASH_FW                "flash_fw"          //!< String command for erase magic key and enter bootloader
 #define STR_IM_APPLICATION          "IMApplication"     //!< String for inform IMFlasher this is application
+#define STR_ACK_OK                  "OK"
+#define STR_ACK_NOK                 "NOK"
 
 void
 Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
@@ -63,7 +77,7 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
     char buffer[300];
 
     if (0 == strcmp((char*)buf, SW_TYPE_STR)) {
-        sprintf(buffer, STR_IM_APPLICATION);
+        CDC_Transmit_FS((uint8_t*)STR_IM_APPLICATION, strlen(STR_IM_APPLICATION));
         CDC_Transmit_FS((uint8_t*)buffer, strlen(buffer));
 
     } else if (0 == strcmp((char*)buf, STR_FLASH_FW)) {
@@ -73,6 +87,8 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
 
         Version_copyToBuffer((uint8_t*)buffer, sizeof(buffer));
         CDC_Transmit_FS((uint8_t*)buffer, strlen(buffer));
+    } else {
+        CDC_Transmit_FS((uint8_t*)STR_ACK_NOK, strlen(STR_ACK_NOK));
     }
 }
 

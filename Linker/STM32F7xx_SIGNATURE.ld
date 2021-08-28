@@ -57,7 +57,7 @@ SECTIONS
     . = ALIGN(32);
   } >FLASH
   
-  .bootloader_flag : ALIGN(4)
+  .bootloader_flag_flash : ALIGN(4)
   {
     FILL(0xFFFFFFFF);
     . += 32; /* Keep empty 32 bytes for bootloader to write flag*/

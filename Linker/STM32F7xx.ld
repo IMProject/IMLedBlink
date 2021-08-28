@@ -51,9 +51,9 @@ SECTIONS
     . = ALIGN(32);
   } >FLASH
   
-  .bootloader_flag : ALIGN(4)
+  .bootloader_flag_flash : ALIGN(4)
   {
-    KEEP(*(.bootloader_flag))
+    KEEP(*(.bootloader_flag_flash))
   } >FLASH
 
   /* The program code and other data into "FLASH" Rom type memory */

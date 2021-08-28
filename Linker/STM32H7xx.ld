@@ -80,9 +80,9 @@ SECTIONS
     . = ALIGN(32);
   } >FLASH
   
-  .bootloader_flag : ALIGN(4)
+  .bootloader_flag_flash : ALIGN(4)
   {
-    KEEP(*(.bootloader_flag))
+    KEEP(*(.bootloader_flag_flash)) /*Keep like this so BL can jump in app when flashed with debugger.*/
   } >FLASH
 
   /* The program code and other data goes into FLASH */
