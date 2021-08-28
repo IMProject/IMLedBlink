@@ -55,6 +55,7 @@ main(void) {
         HAL_Delay(200);
         HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
         HAL_Delay(200);
+        Bootloader_resetHandler();
     }
 
 }

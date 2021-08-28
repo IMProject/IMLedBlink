@@ -41,5 +41,6 @@
 void Bootloader_enterBLOverRam(void);
 void Bootloader_enterBLOverFlash(void);
 void Bootloader_checkCommand(uint8_t* buf, uint32_t length);
+void Bootloader_resetHandler(void);
 
 #endif /* INC_BOOTLOADER_H_ */

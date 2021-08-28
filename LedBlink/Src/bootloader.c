@@ -75,6 +75,8 @@ __attribute__ ((section(".bootloader_flag_ram"))) uint64_t bootloader_flag_ram[4
 #define STR_ACK_OK                  "OK"
 #define STR_ACK_NOK                 "NOK"
 
+bool static s_reset = false;
+
 void
 Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
 
@@ -104,7 +106,7 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
 void
 Bootloader_enterBLOverRam(void) {
     bootloader_flag_ram[0] =  BOOTLOADER_MAGIC_KEY;
-    HAL_NVIC_SystemReset();
+    s_reset = true;
 }
 
 void
@@ -146,7 +148,14 @@ Bootloader_enterBLOverFlash(void) {
 
 
     if (status == HAL_OK) {
+        s_reset = true;
+    }
+}
 
+void
+Bootloader_resetHandler(void) {
+    if (s_reset) {
+        HAL_Delay(200); //wait for last ACK to be sent
         HAL_NVIC_SystemReset();
     }
 }
