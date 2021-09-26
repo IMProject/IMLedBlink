@@ -36,9 +36,9 @@ _Min_Stack_Size = 0x400 ;	/* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  BL_FLAG_RAM (xrw): ORIGIN = 0x20000000, LENGTH = 64 /* Bootloader flag in RAM */
+  BL_FLAG_RAM (xrw): ORIGIN = 0x20000000,	LENGTH = 64 /* Bootloader flag in RAM */
   RAM    (xrw)     : ORIGIN = 0x20000040,	LENGTH = 512K - 64
-  SIGNATURE (rx)   : ORIGIN = 0x0801FFC0, 	LENGTH = 64 /* Never written to the FLASH, it is only a binary signature. */
+  SIGNATURE (rx)   : ORIGIN = 0x0801FFC0,	LENGTH = 64 /* Never written to the FLASH, it is only a binary signature. */
   FLASH  (rx)      : ORIGIN = 0x08020000,	LENGTH = 1920K
 }
 
@@ -64,6 +64,11 @@ SECTIONS
     . += 32; /* Keep empty 32 bytes for bootloader to write flag*/
     BYTE(0xFF)
   } >FLASH
+  
+  .bootloader_flag_ram : ALIGN(4)
+  {
+    KEEP(*(.bootloader_flag_ram))
+  } >BL_FLAG_RAM AT> FLASH
 
   /* The program code and other data into "FLASH" Rom type memory */
   .text :
