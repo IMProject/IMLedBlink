@@ -25,10 +25,10 @@ export TAG := $(shell git tag --sort=committerdate | tail -1)
 export COMMON_SRCS =  \
 LedBlink/Src/main.c \
 LedBlink/Src/bootloader.c \
-LedBlink/Utility/Src/usb_device.c \
-LedBlink/Utility/Src/usbd_conf.c \
-LedBlink/Utility/Src/usbd_desc.c \
-LedBlink/Utility/Src/usbd_cdc_if.c \
+LedBlink/STM32/Src/usb_device.c \
+LedBlink/STM32/Src/usbd_conf.c \
+LedBlink/STM32/Src/usbd_desc.c \
+LedBlink/STM32/Src/usbd_cdc_if.c \
 LedBlink/Utility/Src/version.c \
 LedBlink/Utility/Src/utils.c \
 LedBlink/STM32/Src/system_clock.c \
