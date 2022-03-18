@@ -31,6 +31,8 @@ LedBlink/STM32/Src/usbd_desc.c \
 LedBlink/STM32/Src/usbd_cdc_if.c \
 LedBlink/Utility/Src/version.c \
 LedBlink/Utility/Src/utils.c \
+LedBlink/Utility/Src/json.c \
+LedBlink/Utility/Src/crc32.c \
 LedBlink/STM32/Src/system_clock.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \

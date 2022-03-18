@@ -32,6 +32,8 @@
  *
  ****************************************************************************/
 
+#include "crc32.h"
+#include "utils.h"
 #include "version.h"
 #include "bootloader.h"
 #ifdef STM32L4xx
@@ -69,18 +71,24 @@ __attribute__ ((section(".bootloader_flag_ram"))) uint64_t bootloader_flag_ram[4
 
 #define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
 #define GET_VERSION_CMD             "version"           //!< String command for bootloader to send version
+#define GET_VERSION_JSON_CMD        "version_json"      //!< String command for bootloader to send version in JSON format
 #define STR_ENTER_BL                "enter_bl"          //!< String command to write flag to RAM and enter bootloader
 #define STR_FLASH_FW                "flash_fw"          //!< String command for erase magic key and enter bootloader
 #define STR_IM_APPLICATION          "IMApplication"     //!< String for inform IMFlasher this is application
 #define STR_ACK_OK                  "OK"
 #define STR_ACK_NOK                 "NOK"
 
+#define CRC_INIT_VALUE  (0xFFFFFFFFU)   //!< CRC init value
+#define XOR_CRC_VALUE   (0xFFFFFFFFU)   //!< XOR CRC value
+
+static bool FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size);
+
 bool static s_reset = false;
 
 void
 Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
 
-    char buffer[300];
+    uint8_t tx_buffer[300];
 
     if (0 == strcmp((char*)buf, SW_TYPE_STR)) {
         CDC_Transmit_FS((uint8_t*)STR_IM_APPLICATION, strlen(STR_IM_APPLICATION));
@@ -96,8 +104,13 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
 
     } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
 
-        Version_copyToBuffer((uint8_t*)buffer, sizeof(buffer));
-        CDC_Transmit_FS((uint8_t*)buffer, strlen(buffer));
+        Version_getData(tx_buffer, sizeof(tx_buffer));
+        CDC_Transmit_FS(tx_buffer, strlen((char*)tx_buffer));
+
+    } else if (0 == strcmp((char*)buf, GET_VERSION_JSON_CMD)) {
+
+        Version_getDataJson(tx_buffer, sizeof(tx_buffer));
+        FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
     } else {
         CDC_Transmit_FS((uint8_t*)STR_ACK_NOK, strlen(STR_ACK_NOK));
     }
@@ -160,3 +173,30 @@ Bootloader_resetHandler(void) {
     }
 }
 
+static bool
+FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size) {
+
+    bool success = false;
+    bool null_terminator_exist = false;
+
+    for (size_t i = 0U; i < size; ++i) {
+        if (string[i] == '\0') {
+            null_terminator_exist = true;
+            break;
+        }
+    }
+
+    if (null_terminator_exist) {
+
+        size_t last_char = strlen((char*)string);
+
+        if (size >= last_char) {
+            uint32_t crc = CalculateCRC32(&string[0], last_char, CRC_INIT_VALUE, XOR_CRC_VALUE, false, false, true);
+            Utils_Serialize32BE(&string[last_char], crc);
+            CDC_Transmit_FS(string, last_char + sizeof(crc));
+            success = true;
+        }
+    }
+
+    return success;
+}
