@@ -53,7 +53,7 @@ typedef struct signature {
 } signature_s;
 
 #ifdef STM32L4xx
-#define MAGIC_KEY_ADDRESS (0x08007800)
+#define MAGIC_KEY_ADDRESS (0x0800F800)
 #elif STM32H7xx
 #define MAGIC_KEY_ADDRESS (0x080202A0)
 #elif STM32F7xx

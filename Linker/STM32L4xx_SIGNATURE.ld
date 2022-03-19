@@ -66,8 +66,8 @@ MEMORY
 
   /* Nothing will be written here. It is here only to add 64 bytes signature to the binary file and
    * it is on the bootloader to use this data to verify firmware. */
-  SIGNATURE (rx) : ORIGIN = 0x08007FC0, LENGTH = 64 
-  FLASH (rx)     : ORIGIN = 0x08008000, LENGTH = 480K
+  SIGNATURE (rx) : ORIGIN = 0x0800FFC0, LENGTH = 64 
+  FLASH (rx)     : ORIGIN = 0x08010000, LENGTH = 448K
 }
 
 /* Define output sections */

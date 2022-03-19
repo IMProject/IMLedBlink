@@ -62,8 +62,7 @@ MEMORY
 {
   BL_FLAG_RAM (xrw): ORIGIN = 0x20000000, LENGTH = 64 /* Bootloader flag in RAM */
   RAM    (xrw)     : ORIGIN = 0x20000040, LENGTH = 320K - 64
-  FLAG (rx)        : ORIGIN = 0x08007800, LENGTH = 2K
-  FLASH (rx)       : ORIGIN = 0x08008000, LENGTH = 30K
+  FLASH (rx)       : ORIGIN = 0x08010000, LENGTH = 448K
 }
 
 /* Define output sections */
