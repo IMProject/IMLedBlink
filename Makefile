@@ -88,7 +88,9 @@ format:
 TARGETS	= \
 	stm32l4xx \
 	stm32h7xx \
-	stm32f7xx
+	stm32f7xx \
+	matek_H7_slim \
+	pixhawk4
 
 all:	$(TARGETS)
 
@@ -100,10 +102,10 @@ clean:
 # Board specific targets.
 #
 matek_H7_slim:
-	${MAKE} stm32h7xx BOARD=MATEK_H743_SLIM
+	${MAKE} stm32h7xx BOARD=MATEK_H743_SLIM BOARD_FILE_NAME=$@
 
 pixhawk4:
-	${MAKE} stm32f7xx BOARD=PIXHAWK4
+	${MAKE} stm32f7xx BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
 
 #
 # Microcontroller specific targets.
