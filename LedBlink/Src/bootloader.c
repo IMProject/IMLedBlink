@@ -60,10 +60,10 @@ typedef struct signature {
 #define MAGIC_KEY_ADDRESS (0x08020200U)
 #endif
 
-#define SINGATURE_MAGIC_KEY 0xDEC0DE5528101987
+#define SIGNATURE_MAGIC_KEY 0xDEC0DE5528101987
 #define BOOTLOADER_MAGIC_KEY 0x28101987A5B5C5D5
 
-__attribute__ ((section(".fw_signature"))) signature_s firmware_signature = {.magic_key = SINGATURE_MAGIC_KEY};
+__attribute__ ((section(".fw_signature"))) signature_s firmware_signature = {.magic_key = SIGNATURE_MAGIC_KEY};
 __attribute__ ((section(".bootloader_flag_flash"))) uint64_t bootloader_flag_flash[4] =
 { BOOTLOADER_MAGIC_KEY, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF };
 __attribute__ ((section(".bootloader_flag_ram"))) uint64_t bootloader_flag_ram[4] =
