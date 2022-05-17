@@ -31,12 +31,15 @@ endif
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
+#linker
+LD_NAME = $(basename $(LDSCRIPT))
+LD_SUFFIX = $(suffix $(LDSCRIPT))
+
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -TLinker/$(LDSCRIPT).ld $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
-LDFLAGS_SIGNATURE = $(MCU) -specs=nano.specs -TLinker/$(LDSCRIPT)_SIGNATURE.ld $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
-
+LDFLAGS = $(MCU) -specs=nano.specs -TLinker/$(LD_NAME)$(LD_SUFFIX) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS_SIGNATURE = $(MCU) -specs=nano.specs -TLinker/$(LD_NAME)_SIGNATURE$(LD_SUFFIX) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
 all: debug signed

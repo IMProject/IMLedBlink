@@ -29,10 +29,10 @@ LedBlink/STM32/Src/usb_device.c \
 LedBlink/STM32/Src/usbd_conf.c \
 LedBlink/STM32/Src/usbd_desc.c \
 LedBlink/STM32/Src/usbd_cdc_if.c \
-LedBlink/Utility/Src/version.c \
-LedBlink/Utility/Src/utils.c \
-LedBlink/Utility/Src/json.c \
 LedBlink/Utility/Src/crc32.c \
+LedBlink/Utility/Src/json.c \
+LedBlink/Utility/Src/software_info.c \
+LedBlink/Utility/Src/utils.c \
 LedBlink/STM32/Src/system_clock.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
@@ -112,13 +112,13 @@ pixhawk4:
 #
 
 stm32l4xx: $(MAKEFILE_LIST)
-	${MAKE} -f Makefile.stm32l4xx LDSCRIPT=STM32L4xx FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
+	${MAKE} -f Makefile.stm32l4xx LDSCRIPT=STM32L4xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
 
 stm32h7xx: $(MAKEFILE_LIST)
-	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
+	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
 
 stm32h7xx_ext: $(MAKEFILE_LIST)
-	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@
+	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx.ld FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@
 
 stm32f7xx: $(MAKEFILE_LIST)
-	${MAKE} -f Makefile.stm32f7xx LDSCRIPT=STM32F7xx FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
+	${MAKE} -f Makefile.stm32f7xx LDSCRIPT=STM32F7xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
