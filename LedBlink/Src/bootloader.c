@@ -34,7 +34,7 @@
 
 #include "crc32.h"
 #include "utils.h"
-#include "version.h"
+#include "software_info.h"
 #include "bootloader.h"
 #ifdef STM32L4xx
 #include "stm32l4xx_hal.h"
@@ -69,14 +69,14 @@ __attribute__ ((section(".bootloader_flag_flash"))) uint64_t bootloader_flag_fla
 __attribute__ ((section(".bootloader_flag_ram"))) uint64_t bootloader_flag_ram[4] =
 { 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF };
 
-#define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
-#define GET_VERSION_CMD             "version"           //!< String command for bootloader to send version
-#define GET_VERSION_JSON_CMD        "version_json"      //!< String command for bootloader to send version in JSON format
-#define STR_ENTER_BL                "enter_bl"          //!< String command to write flag to RAM and enter bootloader
-#define STR_FLASH_FW                "flash_fw"          //!< String command for erase magic key and enter bootloader
-#define STR_IM_APPLICATION          "IMApplication"     //!< String for inform IMFlasher this is application
-#define STR_ACK_OK                  "OK"
-#define STR_ACK_NOK                 "NOK"
+#define SW_TYPE_STR             "software_type"         //!< String for bootloader to send if IMFlasher is connected to bootloader
+#define GET_VERSION_CMD         "version"               //!< String command for bootloader to send version
+#define GET_SW_INFO_JSON_CMD    "software_info_json"    //!< String command for bootloader to send software info in JSON format
+#define STR_ENTER_BL            "enter_bl"              //!< String command to write flag to RAM and enter bootloader
+#define STR_FLASH_FW            "flash_fw"              //!< String command for erase magic key and enter bootloader
+#define STR_IM_APPLICATION      "IMApplication"         //!< String for inform IMFlasher this is application
+#define STR_ACK_OK              "OK"
+#define STR_ACK_NOK             "NOK"
 
 #define CRC_INIT_VALUE  (0xFFFFFFFFU)   //!< CRC init value
 #define XOR_CRC_VALUE   (0xFFFFFFFFU)   //!< XOR CRC value
@@ -104,12 +104,12 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
 
     } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
 
-        Version_getData(tx_buffer, sizeof(tx_buffer));
+        SwInfo_getVersion(tx_buffer, sizeof(tx_buffer));
         CDC_Transmit_FS(tx_buffer, strlen((char*)tx_buffer));
 
-    } else if (0 == strcmp((char*)buf, GET_VERSION_JSON_CMD)) {
+    } else if (0 == strcmp((char*)buf, GET_SW_INFO_JSON_CMD)) {
 
-        Version_getDataJson(tx_buffer, sizeof(tx_buffer));
+        SwInfo_getDataJson(tx_buffer, sizeof(tx_buffer));
         FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
     } else {
         CDC_Transmit_FS((uint8_t*)STR_ACK_NOK, strlen(STR_ACK_NOK));
