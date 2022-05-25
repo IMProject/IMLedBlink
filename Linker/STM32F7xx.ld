@@ -36,8 +36,8 @@ _Min_Stack_Size = 0x400 ;	/* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  BL_FLAG_RAM (xrw): ORIGIN = 0x20000000,	LENGTH = 64 /* Bootloader flag in RAM */
-  RAM    (xrw)     : ORIGIN = 0x20000040,	LENGTH = 512K - 64
+  RAM    (xrw)     : ORIGIN = 0x20000000,	LENGTH = 512K - 64K
+  BL_FLAG_RAM (xrw): ORIGIN = 0x20070000,	LENGTH = 64 /* Bootloader flag in RAM */
   FLASH  (rx)      : ORIGIN = 0x08020000,	LENGTH = 1920K
 }
 
