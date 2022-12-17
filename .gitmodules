@@ -1,3 +1,6 @@
 [submodule "LedBlink/Utility"]
 	path = LedBlink/Utility
 	url = git@github.com:IMProject/IMUtility.git
+[submodule "LedBlink/Library"]
+	path = LedBlink/Library
+	url = https://github.com/IMProject/Library

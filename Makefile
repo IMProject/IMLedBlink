@@ -25,13 +25,13 @@ export TAG := $(shell git tag --sort=committerdate | tail -1)
 export COMMON_SRCS =  \
 LedBlink/Src/main.c \
 LedBlink/Src/bootloader.c \
+LedBlink/Library/Src/software_info.c \
 LedBlink/STM32/Src/usb_device.c \
 LedBlink/STM32/Src/usbd_conf.c \
 LedBlink/STM32/Src/usbd_desc.c \
 LedBlink/STM32/Src/usbd_cdc_if.c \
 LedBlink/Utility/Src/crc32.c \
 LedBlink/Utility/Src/json.c \
-LedBlink/Utility/Src/software_info.c \
 LedBlink/Utility/Src/utils.c \
 LedBlink/STM32/Src/system_clock.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
@@ -41,8 +41,9 @@ Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
 
 export COMMON_INCS = \
 -ILedBlink/Inc \
--ILedBlink/Utility/Inc \
+-ILedBlink/Library/Inc \
 -ILedBlink/STM32/Inc \
+-ILedBlink/Utility/Inc \
 -IDrivers/CMSIS/Include \
 -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
 -IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
