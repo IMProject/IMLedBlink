@@ -102,6 +102,9 @@ clean:
 #
 # Board specific targets.
 #
+nucleo_h755zi:
+	${MAKE} stm32h7xx BOARD=NUCLEO_H755ZI BOARD_FILE_NAME=$@
+	
 matek_H7_slim:
 	${MAKE} stm32h7xx BOARD=MATEK_H743_SLIM BOARD_FILE_NAME=$@
 
