@@ -35,30 +35,38 @@
 #ifndef BOOTLOADER_INC_BOARDS_CONFIG_H_
 #define BOOTLOADER_INC_BOARDS_CONFIG_H_
 
-/* LED configuration for board available on the market */
-
-#ifdef MATEK_H743_SLIM
-#define LED1_Pin GPIO_PIN_4  // Green
-#define LED1_GPIO_Port GPIOE
-#define LED2_Pin GPIO_PIN_3  // Blue
-#define LED2_GPIO_Port GPIOE
-#define LED_ON    GPIO_PIN_RESET
-#define LED_OFF   GPIO_PIN_SET
+#ifdef NUCLEO_H755ZI
+#define LED1_Pin            GPIO_PIN_0  // Green
+#define LED1_GPIO_Port      GPIOB
+#define LED2_Pin            GPIO_PIN_14  // Red
+#define LED2_GPIO_Port      GPIOB
+#define LED_ON              GPIO_PIN_RESET
+#define LED_OFF             GPIO_PIN_SET
+#define PWR_SUPPLY          PWR_DIRECT_SMPS_SUPPLY
+#elif MATEK_H743_SLIM
+#define LED1_Pin            GPIO_PIN_4  // Green
+#define LED1_GPIO_Port      GPIOE
+#define LED2_Pin            GPIO_PIN_3  // Blue
+#define LED2_GPIO_Port      GPIOE
+#define LED_ON              GPIO_PIN_RESET
+#define LED_OFF             GPIO_PIN_SET
+#define PWR_SUPPLY          PWR_LDO_SUPPLY
 #elif PIXHAWK4
-#define LED1_Pin GPIO_PIN_6     // Green
-#define LED1_GPIO_Port GPIOC
-#define LED2_Pin GPIO_PIN_7     // Blue
-#define LED2_GPIO_Port GPIOC
-#define LED_ON    GPIO_PIN_RESET
-#define LED_OFF   GPIO_PIN_SET
+#define LED1_Pin            GPIO_PIN_6     // Green
+#define LED1_GPIO_Port      GPIOC
+#define LED2_Pin            GPIO_PIN_7     // Blue
+#define LED2_GPIO_Port      GPIOC
+#define LED_ON              GPIO_PIN_RESET
+#define LED_OFF             GPIO_PIN_SET
+#define PWR_SUPPLY          PWR_LDO_SUPPLY
 #else
-#define LED1_Pin GPIO_PIN_13
-#define LED1_GPIO_Port GPIOC
-#define LED2_Pin GPIO_PIN_14
-#define LED2_GPIO_Port GPIOC
-#define LED_ON    GPIO_PIN_SET
-#define LED_OFF   GPIO_PIN_RESET
-
+#define LED1_Pin            GPIO_PIN_13
+#define LED1_GPIO_Port      GPIOC
+#define LED2_Pin            GPIO_PIN_14
+#define LED2_GPIO_Port      GPIOC
+#define LED_ON              GPIO_PIN_SET
+#define LED_OFF             GPIO_PIN_RESET
+#define PWR_SUPPLY          PWR_LDO_SUPPLY
 #endif
 
 
