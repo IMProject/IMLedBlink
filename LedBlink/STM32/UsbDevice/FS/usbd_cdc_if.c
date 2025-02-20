@@ -23,6 +23,7 @@
 #include "usbd_cdc_if.h"
 #include "bootloader.h"
 
+
 /* USER CODE BEGIN INCLUDE */
 
 /* USER CODE END INCLUDE */
@@ -111,7 +112,6 @@ uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
   * @brief Public variables.
   * @{
   */
-
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
 /* USER CODE BEGIN EXPORTED_VARIABLES */
@@ -139,7 +139,6 @@ static int8_t CDC_Receive_FS(uint8_t* pbuf, uint32_t* Len);
 /**
   * @}
   */
-
 USBD_CDC_ItfTypeDef USBD_Interface_fops_FS = {
     CDC_Init_FS,
     CDC_DeInit_FS,
@@ -156,9 +155,9 @@ static int8_t
 CDC_Init_FS(void) {
     /* USER CODE BEGIN 3 */
     /* Set Application Buffers */
-    USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 0);
-    USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS);
-    return (USBD_OK);
+    int8_t result = USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 0);
+    result = USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS);
+    return result;
     /* USER CODE END 3 */
 }
 
@@ -183,6 +182,10 @@ CDC_DeInit_FS(void) {
 static int8_t
 CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
     /* USER CODE BEGIN 5 */
+    if ((pbuf == (void*)0) || (length == 0U)) {
+        // MISRA
+    }
+
     switch (cmd) {
         case CDC_SEND_ENCAPSULATED_COMMAND:
 
@@ -262,9 +265,9 @@ CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length) {
 static int8_t
 CDC_Receive_FS(uint8_t* Buf, uint32_t* Len) {
     Bootloader_checkCommand(Buf, *Len);
-    USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
-    USBD_CDC_ReceivePacket(&hUsbDeviceFS);
-    return (USBD_OK);
+    uint8_t result = USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
+    result = USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+    return result;
     /* USER CODE END 6 */
 }
 
@@ -283,12 +286,14 @@ uint8_t
 CDC_Transmit_FS(uint8_t* Buf, uint16_t Len) {
     uint8_t result = USBD_OK;
     /* USER CODE BEGIN 7 */
+    // cppcheck-suppress misra-c2012-11.5; conversion from void* to USBD_CDC_HandleTypeDef* is needed here
     USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
     if (hcdc->TxState != 0) {
-        return USBD_BUSY;
+        result = USBD_BUSY;
+    } else {
+        result = USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);
+        result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
     }
-    USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);
-    result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
     /* USER CODE END 7 */
     return result;
 }

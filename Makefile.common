@@ -12,6 +12,27 @@ C_DEFS += \
 -DGIT_HASH=\"$(HASH)\" \
 -DGIT_TAG=\"$(TAG)\"
 
+# Check if USB is FS or HS
+ifeq ($(USB),FS)
+	C_SOURCES += \
+	LedBlink/STM32/UsbDevice/FS/usb_device.c \
+	LedBlink/STM32/UsbDevice/FS/usbd_conf.c \
+	LedBlink/STM32/UsbDevice/FS/usbd_desc.c \
+	LedBlink/STM32/UsbDevice/FS/usbd_cdc_if.c
+	
+	C_INCLUDES += \
+	-ILedBlink/STM32/UsbDevice/FS
+else
+	C_SOURCES += \
+	LedBlink/STM32/UsbDevice/HS/usb_device.c \
+	LedBlink/STM32/UsbDevice/HS/usbd_conf.c \
+	LedBlink/STM32/UsbDevice/HS/usbd_desc.c \
+	LedBlink/STM32/UsbDevice/HS/usbd_cdc_if.c
+	
+	C_INCLUDES += \
+	-ILedBlink/STM32/UsbDevice/HS
+endif
+
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 

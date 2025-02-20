@@ -60,6 +60,12 @@ typedef struct signature {
 #define MAGIC_KEY_ADDRESS (0x08020200U)
 #endif
 
+#ifdef STM32H735xx
+#define CDC_Transmit CDC_Transmit_HS
+#else
+#define CDC_Transmit CDC_Transmit_FS
+#endif
+
 #define SIGNATURE_MAGIC_KEY 0xDEC0DE5528101987
 #define BOOTLOADER_MAGIC_KEY 0x28101987A5B5C5D5
 
@@ -91,11 +97,11 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
     uint8_t tx_buffer[300];
 
     if (0 == strcmp((char*)buf, SW_TYPE_STR)) {
-        CDC_Transmit_FS((uint8_t*)STR_IM_APPLICATION, strlen(STR_IM_APPLICATION));
+        CDC_Transmit((uint8_t*)STR_IM_APPLICATION, strlen(STR_IM_APPLICATION));
 
     } else if (0 == strcmp((char*)buf, STR_ENTER_BL)) {
 
-        CDC_Transmit_FS((uint8_t*)STR_ACK_OK, strlen(STR_ACK_OK));
+        CDC_Transmit((uint8_t*)STR_ACK_OK, strlen(STR_ACK_OK));
         Bootloader_enterBLOverRam();
 
     } else if (0 == strcmp((char*)buf, STR_FLASH_FW)) {
@@ -105,14 +111,14 @@ Bootloader_checkCommand(uint8_t* buf, uint32_t length) {
     } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
 
         SwInfo_getVersion(tx_buffer, sizeof(tx_buffer));
-        CDC_Transmit_FS(tx_buffer, strlen((char*)tx_buffer));
+        CDC_Transmit(tx_buffer, strlen((char*)tx_buffer));
 
     } else if (0 == strcmp((char*)buf, GET_SW_INFO_JSON_CMD)) {
 
         SwInfo_getDataJson(tx_buffer, sizeof(tx_buffer));
         FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
     } else {
-        CDC_Transmit_FS((uint8_t*)STR_ACK_NOK, strlen(STR_ACK_NOK));
+        CDC_Transmit((uint8_t*)STR_ACK_NOK, strlen(STR_ACK_NOK));
     }
 }
 
@@ -193,7 +199,7 @@ FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size) {
         if (size >= last_char) {
             uint32_t crc = CalculateCRC32(&string[0], last_char, CRC_INIT_VALUE, XOR_CRC_VALUE, false, false, true);
             Utils_Serialize32BE(&string[last_char], crc);
-            CDC_Transmit_FS(string, last_char + sizeof(crc));
+            CDC_Transmit(string, last_char + sizeof(crc));
             success = true;
         }
     }

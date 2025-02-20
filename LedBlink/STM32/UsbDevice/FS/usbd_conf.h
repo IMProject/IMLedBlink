@@ -20,15 +20,14 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CONF__H__
-#define __USBD_CONF__H__
+#ifndef USBD_CONF_H_
+#define USBD_CONF_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "main.h"
@@ -96,10 +95,10 @@ extern "C" {
 #define USBD_free           USBD_static_free
 
 /** Alias for memory set. */
-#define USBD_memset         /* Not used */
+#define USBD_memset         memset
 
 /** Alias for memory copy. */
-#define USBD_memcpy         /* Not used */
+#define USBD_memcpy         memcpy
 
 /** Alias for delay. */
 #define USBD_Delay          HAL_Delay
@@ -168,6 +167,6 @@ void USBD_static_free(void* p);
 }
 #endif
 
-#endif /* __USBD_CONF__H__ */
+#endif /* USBD_CONF_H_ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

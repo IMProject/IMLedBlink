@@ -26,10 +26,6 @@ export COMMON_SRCS =  \
 LedBlink/Src/main.c \
 LedBlink/Src/bootloader.c \
 LedBlink/Library/Src/software_info.c \
-LedBlink/STM32/Src/usb_device.c \
-LedBlink/STM32/Src/usbd_conf.c \
-LedBlink/STM32/Src/usbd_desc.c \
-LedBlink/STM32/Src/usbd_cdc_if.c \
 LedBlink/Utility/Src/crc32.c \
 LedBlink/Utility/Src/json.c \
 LedBlink/Utility/Src/utils.c \
@@ -83,15 +79,18 @@ format:
 	$(call colorecho,'Formatting with astyle')
 	@Tools/astyle/check_code_style_all.sh --fix
 
+export USB=FS
 #
 # LedBlinks to build
 #
 TARGETS	= \
+	nucleo_h755zi \
+	matek_H7_slim \
+	pixhawk4 \
 	stm32l4xx \
 	stm32h7xx \
 	stm32f7xx \
-	matek_H7_slim \
-	pixhawk4
+	stm32h735g_dk
 
 all:	$(TARGETS)
 
@@ -110,6 +109,9 @@ matek_H7_slim:
 
 pixhawk4:
 	${MAKE} stm32f7xx BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
+	
+stm32h735g_dk:
+	${MAKE} stm32h7xx BOARD=STM32H735G_DK BOARD_FILE_NAME=$@
 
 #
 # Microcontroller (MCU) specific targets.
