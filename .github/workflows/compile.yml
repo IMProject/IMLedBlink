@@ -1,0 +1,32 @@
+name: Compile targets
+
+on:
+  push:
+    branches: 
+    - 'master'
+  pull_request:
+    branches:
+    - '*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [
+          all
+          ]
+          
+    container:       
+      image: igormisic/improject:v1.0.2
+      options: --privileged --ulimit core=-1 --security-opt seccomp=unconfined
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        submodules: 'true'
+      
+    - name: make ${{matrix.config}}
+      run: make ${{matrix.config}}
