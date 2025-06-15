@@ -26,10 +26,12 @@ export COMMON_SRCS =  \
 LedBlink/Src/main.c \
 LedBlink/Src/bootloader.c \
 LedBlink/Library/Src/software_info.c \
+LedBlink/STM32/Src/syscalls.c \
+LedBlink/STM32/Src/sysmem.c \
+LedBlink/STM32/Src/system_clock.c \
 LedBlink/Utility/Src/crc32.c \
 LedBlink/Utility/Src/json.c \
 LedBlink/Utility/Src/utils.c \
-LedBlink/STM32/Src/system_clock.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
