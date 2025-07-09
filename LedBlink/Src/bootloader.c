@@ -48,9 +48,21 @@
 #include <stdint.h>
 
 typedef struct signature {
-    uint64_t magic_key;
-    uint64_t unused[7];
-} signature_s;
+    uint64_t magic_key;         //!< First 8 bytes for the magic key
+    uint64_t type       : 8;    //!< Type of binary file
+    uint64_t encrypted  : 1;    //!< Indicate if file is encrypted (file only, not communication)
+    uint64_t reserved_1 : 55;   //!< The rest of bits are reserved for future use
+    uint64_t reserved_2[6];     //!< The rest of the 48 bytes are reserved for future use
+} signature_S;
+
+//! Enumeration for different signatures
+typedef enum signatureType_ENUM {
+    signatureType_FIRMWARE_FLASH    = 0x00, //!< New firmware for FLASH
+    signatureType_FIRMWARE_RAM      = 0x01, //!< Firmware for RAM
+    signatureType_BOOTLOADER_FLASH  = 0x02, //!< New bootloader for FLASH
+    signatureType_BOOTLOADER_RAM    = 0x03, //!< Bootloader for RAM
+    signatureType_UNKNOWN           = 0xFF, //!< Not existing or unknown signature
+} signatureType_E;
 
 #ifdef STM32L4xx
 #define MAGIC_KEY_ADDRESS (0x0800F800)
@@ -60,7 +72,7 @@ typedef struct signature {
 #define MAGIC_KEY_ADDRESS (0x08020200U)
 #endif
 
-#ifdef STM32H735xx
+#if defined(STM32H735xx) || defined(STM32N6xx)
 #define CDC_Transmit CDC_Transmit_HS
 #else
 #define CDC_Transmit CDC_Transmit_FS
@@ -69,7 +81,15 @@ typedef struct signature {
 #define SIGNATURE_MAGIC_KEY 0xDEC0DE5528101987
 #define BOOTLOADER_MAGIC_KEY 0x28101987A5B5C5D5
 
-__attribute__ ((section(".fw_signature"))) signature_s firmware_signature = {.magic_key = SIGNATURE_MAGIC_KEY};
+__attribute__ ((section(".fw_signature"))) signature_S firmware_signature = {
+    .magic_key = SIGNATURE_MAGIC_KEY,
+#if !LDS_RAM_VERSION
+    .type = signatureType_FIRMWARE_FLASH
+#else
+    .type = signatureType_FIRMWARE_RAM
+#endif
+};
+
 __attribute__ ((section(".bootloader_flag_flash"))) uint64_t bootloader_flag_flash[4] =
 { BOOTLOADER_MAGIC_KEY, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF };
 __attribute__ ((section(".bootloader_flag_ram"))) uint64_t bootloader_flag_ram[4] =
@@ -134,7 +154,9 @@ Bootloader_enterBLOverFlash(void) {
     /* Erase the page with the magic key so the bootloader knows it needs to flash the firmware.
      * Once erased new firmware needs to be flashed. For entering in BL without flashing use enterBLOverRam.
      */
+#ifndef STM32N6xx //TODO: The STM32N6xx doesn't have internal flash, and this feature is not currently supported on external flash.
     HAL_FLASH_Unlock();
+#endif
     HAL_StatusTypeDef      status = HAL_OK;
 #ifdef STM32L4xx
     FLASH_EraseInitTypeDef pEraseInit;

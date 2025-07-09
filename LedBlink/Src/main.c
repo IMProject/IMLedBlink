@@ -76,6 +76,9 @@ MX_GPIO_Init(void) {
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_GPIOE_CLK_ENABLE();
     __HAL_RCC_GPIOF_CLK_ENABLE();
+#if defined (STM32N657xx)
+    __HAL_RCC_GPIOG_CLK_ENABLE();
+#endif
 
     /*Configure GPIO pin Output Level */
     HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
