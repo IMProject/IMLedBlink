@@ -44,15 +44,18 @@ extern "C" {
 #include "system_clock.h"
 #include "boards_config.h"
 
-#ifdef STM32L4xx
-#include "stm32l4xx.h"
-#include "stm32l4xx_hal.h"
-#elif STM32H7xx
-#include "stm32h7xx.h"
-#include "stm32h7xx_hal.h"
-#elif STM32F7xx
+#if defined(STM32F7xx)
 #include "stm32f7xx.h"
 #include "stm32f7xx_hal.h"
+#elif defined(STM32H7xx)
+#include "stm32h7xx.h"
+#include "stm32h7xx_hal.h"
+#elif defined(STM32L4xx)
+#include "stm32l4xx.h"
+#include "stm32l4xx_hal.h"
+#elif defined(STM32N657xx)
+#include "stm32n6xx.h"
+#include "stm32n6xx_hal.h"
 #endif
 
 

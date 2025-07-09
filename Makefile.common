@@ -12,6 +12,12 @@ C_DEFS += \
 -DGIT_HASH=\"$(HASH)\" \
 -DGIT_TAG=\"$(TAG)\"
 
+# Check if the linker data script (LDS) is RAM version
+ifeq (RAM, $(findstring RAM, $(LDSCRIPT))) 
+	C_DEFS +=  \
+	-DLDS_RAM_VERSION
+endif
+
 # Check if USB is FS or HS
 ifeq ($(USB),FS)
 	C_SOURCES += \
@@ -47,6 +53,11 @@ CFLAGS += -D$(BOARD)
 TARGET := $(TARGET)_$(BOARD_FILE_NAME)
 else
 TARGET := $(TARGET)_$(MCU_FILE_NAME)
+endif
+
+# Quick method to add the -mcmse flag for STM32N6xx MCUs (TrustZone support)
+ifeq (STM32N6xx, $(findstring STM32N6xx, $(LDSCRIPT)))
+	CFLAGS += -mcmse 
 endif
 
 # Generate dependency information
