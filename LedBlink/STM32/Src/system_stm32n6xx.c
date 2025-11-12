@@ -234,8 +234,11 @@ SystemInit(void) {
     RCC->APB4ENR2 &= ~(0x00000010UL);
 
     /* XSPI2 & XSPIM reset                                  */
-    RCC->AHB5RSTSR = RCC_AHB5RSTSR_XSPIMRSTS | RCC_AHB5RSTSR_XSPI2RSTS;
-    RCC->AHB5RSTCR = RCC_AHB5RSTCR_XSPIMRSTC | RCC_AHB5RSTCR_XSPI2RSTC;
+    /* The XSPI2 & XSPIM reset is intentionally skipped when running from external flash
+       to preserve the flash controller configuration. Uncommenting the following lines
+       may disrupt execution if code is running from external flash. */
+    // RCC->AHB5RSTSR = RCC_AHB5RSTSR_XSPIMRSTS | RCC_AHB5RSTSR_XSPI2RSTS;
+    // RCC->AHB5RSTCR = RCC_AHB5RSTCR_XSPIMRSTC | RCC_AHB5RSTCR_XSPI2RSTC;
 
 #if defined(USER_TZ_SAU_SETUP)
     /* SAU/IDAU, FPU and Interrupts secure/non-secure allocation settings */

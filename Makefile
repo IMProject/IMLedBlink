@@ -87,6 +87,8 @@ export USB=FS
 #
 TARGETS	= \
 	nucleo_h755zi \
+	nucleo_n657x0_q_ext \
+	nucleo_n657x0_q_ram \
 	matek_H7_slim \
 	pixhawk4 \
 	stm32l4xx \
@@ -115,6 +117,9 @@ pixhawk4:
 stm32h735g_dk:
 	${MAKE} stm32h7xx BOARD=STM32H735G_DK BOARD_FILE_NAME=$@
 	
+nucleo_n657x0_q_ext:
+	${MAKE} stm32n6xx_ext BOARD=NUCLEO_N657X0_Q BOARD_FILE_NAME=$@
+	
 nucleo_n657x0_q_ram:
 	${MAKE} stm32n6xx_ram BOARD=NUCLEO_N657X0_Q BOARD_FILE_NAME=$@
 
@@ -133,6 +138,9 @@ stm32h7xx_ext: $(MAKEFILE_LIST)
 
 stm32l4xx: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32l4xx LDSCRIPT=STM32L4xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
+	
+stm32n6xx_ext: $(MAKEFILE_LIST)
+	${MAKE} -f Makefile.stm32n6xx LDSCRIPT=STM32N6xx_EXT_FLASH.ld FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@
 	
 stm32n6xx_ram: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32n6xx LDSCRIPT=STM32N6xx_RAM.ld FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@
